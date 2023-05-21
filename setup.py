@@ -11,5 +11,5 @@ network_destination = "checkpoints/network.pt"
 download_file_from_google_drive(network, network_destination)
 
 network = "1y4uKqFdxirgKRlc8BTPBBP6-lriu9gqj"
-network_destination = "checkpoints/a.pt"
+network_destination = "checkpoints/checkpoint.pt"
 download_file_from_google_drive(network, network_destination)
