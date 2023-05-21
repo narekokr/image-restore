@@ -88,7 +88,8 @@ class ImageProcessor:
             transforms.Normalize(mean=[0.5], std=[0.5])
         ])
         with torch.no_grad():
-            output = self.scratch_model(transform(image).reshape((1, 1, image.size[1], image.size[0])))
+            output = self.scratch_model(transform(image).reshape((1, 1, image.size[1], image.size[0])).to(self.device))
+            output = output.cpu()
             mask = output[0].permute(1, 2, 0).numpy() > 0.5
             output = torch.sigmoid(output)
             mask = output[0].permute(1, 2, 0).numpy() > 0.5
@@ -117,7 +118,7 @@ class ImageProcessor:
         tensor = read_image('a.png', ImageReadMode.RGB)
         os.remove('a.png')
         image = self.preprocess_colorize(tensor)
-        pred = self.colorize_model.forward(image[0].float().view(1, 1, 160, 160))
+        pred = self.colorize_model.forward(image[0].float().view(1, 1, 160, 160).to(self.device))
         lab_pred = torch.cat((image[0].view(1, 160, 160), pred[0].cpu()), dim=0)
         lab_pred_inv_scaled = lab_pred.permute(1, 2, 0) * torch.tensor([100, 255, 255]) - torch.tensor([0, 128, 128])
         rgb_pred = lab2rgb(lab_pred_inv_scaled.detach().numpy())

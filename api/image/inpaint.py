@@ -9,7 +9,10 @@ image_processor = ImageProcessor()
 @inpaint_bp.route('/inpaint', methods=['POST'])
 def inpaint():
     image = request.files['image']
-    mask = request.files['mask']
+    try:
+        mask = request.files['mask']
+    except:
+        mask = False
     detect_automatically = request.args.get('detect_automatically', default='true')
     detect_automatically = not mask or detect_automatically.lower() == 'true'
 
