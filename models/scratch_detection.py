@@ -47,6 +47,16 @@ class ImageProcessor:
 
     def get_inpainted_image(self, image, mask, detect_automatically):
         orig = Image.open(image)
+
+        width, height = orig.size
+
+        # Calculate the new width and height that are divisible by 16
+        new_width = (width // 16) * 16
+        new_height = (height // 16) * 16
+
+        # Resize the image using the calculated dimensions
+        orig = orig.resize((new_width, new_height))
+
         img = orig.convert('L')
 
         if orig.size[0] < 256 or orig.size[1] < 256:
@@ -56,7 +66,7 @@ class ImageProcessor:
             should_resize_back = False
 
         if not detect_automatically:
-            msk = Image.open(mask).convert('L')
+            msk = Image.open(mask).convert('L').resize(orig.size)
             msk = cv2.cvtColor(np.array(msk), cv2.IMREAD_GRAYSCALE)
         else:
             output = self.scratch_detection(img)
