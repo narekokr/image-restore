@@ -14,6 +14,8 @@ from torchvision.io import read_image, ImageReadMode
 
 from networks.autoencoder import ConvAutoencoder
 from networks.network import Network
+from networks.siggraph import SIGGRAPHGenerator
+from util import preprocess_img, postprocess_tens
 
 toTensor = transforms.ToTensor()
 
@@ -29,10 +31,10 @@ def merge(img, rgb):
 
 
 class ImageProcessor:
-    def __init__(self, model_weights_path='checkpoints/network.pt', colorize_path='checkpoints/checkpoint.pt'):
+    def __init__(self, model_weights_path='checkpoints/network.pt', colorize_path='checkpoints/siggraph.pt'):
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.scratch_model = self.load_network(Network, False, model_weights_path)
-        self.colorize_model = self.load_network(ConvAutoencoder, False, colorize_path)
+        self.colorize_model = self.load_network(SIGGRAPHGenerator, False, colorize_path)
 
     def load_network(self, network, isParallel, path):
         # Instantiate your PyTorch model and load the weights
@@ -87,10 +89,10 @@ class ImageProcessor:
 
     def colorize(self, image):
         with torch.no_grad():
-            output = self.predict(image)
+            output = self.predict_siggraph(image)
 
-        result = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-        return result
+        # result = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
+        return output
 
     def scratch_detection(self, image):
         transform = transforms.Compose([
@@ -137,3 +139,8 @@ class ImageProcessor:
         a = cv2.cvtColor(out, cv2.COLOR_BGR2RGB)
 
         return a
+
+    def predict_siggraph(self, img):
+        (tens_l_orig, tens_l_rs) = preprocess_img(img, HW=(256, 256))
+        out_img_siggraph17 = postprocess_tens(tens_l_orig, self.colorize_model(tens_l_rs).cpu())
+        return out_img_siggraph17

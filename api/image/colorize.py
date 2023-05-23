@@ -19,7 +19,8 @@ def colorize():
     # Decode the image array using OpenCV
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     result = image_processor.colorize(img)
+    out = cv2.cvtColor((result * 255).astype(np.float32), cv2.COLOR_BGR2RGB)
 
     # Convert the result image to bytes
-    result_bytes = cv2.imencode('.png', result)[1].tobytes()
+    result_bytes = cv2.imencode('.png', out)[1].tobytes()
     return send_file(BytesIO(result_bytes), mimetype='image/png')

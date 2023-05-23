@@ -13,3 +13,7 @@ download_file_from_google_drive(network, network_destination)
 network = "1y4uKqFdxirgKRlc8BTPBBP6-lriu9gqj"
 network_destination = "checkpoints/checkpoint.pt"
 download_file_from_google_drive(network, network_destination)
+
+network ="1f7RMW1awbwgUjkM0tJ_Q8zV3z5lgfPQU"
+network_destination = "checkpoints/siggraph.pt"
+download_file_from_google_drive(network, network_destination)

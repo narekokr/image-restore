@@ -1,4 +1,6 @@
 from io import BytesIO
+
+import numpy as np
 from flask import Blueprint, request, send_file
 import cv2
 
@@ -19,6 +21,7 @@ def colorize_and_inpaint():
 
     result = image_processor.get_inpainted_image(image, mask, detect_automatically)
     result = image_processor.colorize(result)
-    result_bytes = cv2.imencode('.png', result)[1].tobytes()
+    out = cv2.cvtColor((result * 255).astype(np.float32), cv2.COLOR_BGR2RGB)
+    result_bytes = cv2.imencode('.png', out)[1].tobytes()
 
     return send_file(BytesIO(result_bytes), mimetype='image/png')
