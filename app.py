@@ -16,8 +16,15 @@ app.register_blueprint(inpaint_bp, url_prefix='/image')
 app.register_blueprint(colorize_inpaint_bp, url_prefix='/image')
 
 load_dotenv()
-is_dev_mode = os.environ['is_dev_mode']
+try:
+    is_dev_mode = os.environ['is_dev_mode']
+except:
+    is_dev_mode = False
 debug = is_dev_mode == 'True'
+
+@app.route('/')
+def hello_world():
+    return 'Hello world'
 
 if __name__ == '__main__':
     app.run(debug=debug)
