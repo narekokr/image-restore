@@ -11,4 +11,5 @@ RUN python3 setup.py
 
 ARG PORT
 ENV PORT=$PORT
+RUN echo "python3 -m flask run --host=0.0.0.0 -=p=$PORT"
 CMD python3 -m flask run --host=0.0.0.0 -=p=$PORT
