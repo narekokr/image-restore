@@ -1,5 +1,5 @@
 import os
-os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/"
+os.environ['MPLCONFIGDIR'] = '/tmp'
 
 from flask import Flask
 from dotenv import load_dotenv
