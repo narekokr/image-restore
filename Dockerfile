@@ -1,15 +1,11 @@
-FROM python:3.10
-
-WORKDIR /app
+FROM public.ecr.aws/lambda/python:3.10
 
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
-COPY . .
-RUN apt update && apt install ffmpeg libsm6 libxext6 -y
+COPY . ${LAMBDA_TASK_ROOT}/.
+RUN yum install -y libXext libSM libXrender mesa-libGL
+RUN cd ${LAMBDA_TASK_ROOT}
 RUN python3 setup.py
 
-ARG PORT
-ENV PORT=$PORT
-RUN echo "python3 -m flask run --host=0.0.0.0 --p=$PORT"
-CMD python3 -m flask run --host=0.0.0.0 --port=$PORT
+CMD [ "lambda_function.handler" ]
