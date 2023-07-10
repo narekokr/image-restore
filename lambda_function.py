@@ -1,4 +1,5 @@
 import os
+import subprocess
 import serverless_wsgi
 os.environ['MPLCONFIGDIR'] = '/tmp'
 
@@ -8,6 +9,8 @@ from api.image.colorize import colorize_bp
 from api.image.inpaint import inpaint_bp
 from api.image.colorize_inpaint import colorize_inpaint_bp
 from flask_cors import CORS, cross_origin
+print('file opened')
+print(subprocess.run('ls'))
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -29,4 +32,5 @@ def hello_world():
     return 'Hello world'
 
 def handler(event, context):
+    print('request received')
     return serverless_wsgi.handle_request(app, event, context)
