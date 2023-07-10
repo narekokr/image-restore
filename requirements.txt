@@ -10,3 +10,4 @@ scipy~=1.10.0
 matplotlib
 scikit-image
 flask_cors
+serverless_wsgi

@@ -1,4 +1,5 @@
 import os
+import serverless_wsgi
 os.environ['MPLCONFIGDIR'] = '/tmp'
 
 from flask import Flask
@@ -27,6 +28,5 @@ debug = is_dev_mode == 'True'
 def hello_world():
     return 'Hello world'
 
-import sys
 def handler(event, context):
-    return 'Hello from AWS Lambda using Python' + sys.version + '!'
+    return serverless_wsgi.handle_request(app, event, context)
