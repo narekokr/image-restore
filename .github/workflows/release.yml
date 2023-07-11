@@ -33,4 +33,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
       - name: Update AWS Lambda function code
-        run: aws lambda update-function-code --function-name test --image-uri 026578485892.dkr.ecr.eu-south-1.amazonaws.com/image-restore:latest --region eu-south-1
+        env:
+          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $AWS_ACCOUNT_ID.dkr.ecr.eu-south-1.amazonaws.com/image-restore:latest --region eu-south-1
