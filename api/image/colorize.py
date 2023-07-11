@@ -1,3 +1,4 @@
+import base64
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,12 +13,11 @@ image_processor = ImageProcessor()
 
 @colorize_bp.route('/colorize', methods=['POST'])
 def colorize():
-    image = request.files['image']
-
-    img_array = np.fromstring(image.read(), np.uint8)
-
-    # Decode the image array using OpenCV
-    img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    base64_string = request.json['image']  # Assuming the base64 string is sent as JSON in the request body
+    img_b64dec = base64.b64decode(base64_string)
+    img_byteIO = BytesIO(img_b64dec)
+    image = Image.open(img_byteIO).convert('RGB')
+    img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     result = image_processor.colorize(img)
     out = cv2.cvtColor((result * 255).astype(np.float32), cv2.COLOR_BGR2RGB)
 

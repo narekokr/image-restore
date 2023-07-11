@@ -1,3 +1,6 @@
+import base64
+from io import BytesIO
+
 from PIL import Image
 import numpy as np
 from skimage import color
@@ -40,3 +43,16 @@ def postprocess_tens(tens_orig_l, out_ab, mode='bilinear'):
 
     out_lab_orig = torch.cat((tens_orig_l, out_ab_orig), dim=1)
     return color.lab2rgb(out_lab_orig.data.cpu().numpy()[0, ...].transpose((1, 2, 0)))
+
+def get_image_and_mask_from_request(request):
+    image = request.json['image']
+    try:
+        mask = request.json['mask']
+        mask = base64.b64decode(mask)
+        mask = BytesIO(mask)
+    except:
+        mask = False
+    img_b64dec = base64.b64decode(image)
+    image = BytesIO(img_b64dec)
+
+    return image, mask
