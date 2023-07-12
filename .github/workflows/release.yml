@@ -17,7 +17,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-south-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -32,8 +32,9 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Update AWS Lambda function code
-        env:
-          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        run: aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $AWS_ACCOUNT_ID.dkr.ecr.eu-south-1.amazonaws.com/image-restore:latest --region eu-south-1
+#      - name: Update AWS Lambda function code
+#        env:
+#          LAMBDA_FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
+#          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+#          AWS_REGION: ${{ secrets.AWS_REGION }}
+#        run: aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/image-restore:latest --region $AWS_REGION
