@@ -142,5 +142,5 @@ class ImageProcessor:
 
     def predict_siggraph(self, img):
         (tens_l_orig, tens_l_rs) = preprocess_img(img, HW=(256, 256))
-        out_img_siggraph17 = postprocess_tens(tens_l_orig, self.colorize_model(tens_l_rs).cpu())
+        out_img_siggraph17 = postprocess_tens(tens_l_orig, self.colorize_model(tens_l_rs.to(self.device)).cpu())
         return out_img_siggraph17
